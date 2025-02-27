@@ -1,5 +1,28 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import axios from "axios";
+import { handleError, handleSuccess } from "../../utils";
+const sendFundingRequest = async () => {
+    try {
+      const requestData = {
+        startupEmail: "founder@techinnovators.com",
+        investorEmail: "ananya.sharma@example.com",
+        amount: 1000000,
+        equity: 10,
+        notes: "I am interested in collaborating with your startup"
+      };
+  
+      const response = await axios.post(`http://localhost:8000/api/funding/initiate`, requestData);
+      
+      handleSuccess("Funding request sent successfully!");
+      console.log("Response:", response.data);
+    } catch (error) {
+      console.error("Error sending funding request:", error.response?.data || error.message);
+      handleError("Failed to send funding request.");
+    }
+  };
+
 const Card = ({ company }) => {
     const userType = localStorage.getItem("userType");
     console.log(company)
@@ -125,6 +148,9 @@ const Card = ({ company }) => {
                     >
                         Visit Website
                     </a>
+                    <button onClick={sendFundingRequest}  className="block  m-4 text-center bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+                    >Initate Propsal</button>
+                    <ToastContainer />
                 </>
             )}
         </div>

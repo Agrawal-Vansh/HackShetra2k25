@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { handleError, handleSuccess } from "../../utils";
 import axios from "axios";
+
+
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -10,8 +12,8 @@ const RegisterPage = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    userType: userType,
     name: "",
+    userType: userType, // Initialize with userType
     companyInfo: {
       name: "",
       description: "",
@@ -46,6 +48,14 @@ const RegisterPage = () => {
     },
     pastInvestments: [],
   });
+
+
+  useEffect(() => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      userType: userType, 
+    }));
+  }, [userType]); 
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -88,7 +98,7 @@ const RegisterPage = () => {
     e.preventDefault();
     console.log(formData);
   
-    // Check for required fields
+
     const requiredFields = ["email", "password", "name"];
     if (userType === "startup") {
       requiredFields.push("companyInfo.name", "companyInfo.industry", "funding.stage", "funding.amountNeeded", "funding.equityOffering");
@@ -96,16 +106,10 @@ const RegisterPage = () => {
       requiredFields.push("investorInfo.firmName", "investmentCriteria.minAmount", "investmentCriteria.maxAmount");
     }
   
-    for (const field of requiredFields) {
-      if (!formData[field]) {
-        return handleError(`Field ${field} is required`);
-      }
-    }
-  
     try {
       await axios.post(`${import.meta.env.VITE_URL}/auth/register`, {
         ...formData,
-        userType,
+        userType, // Use the current userType from state
       });
       handleSuccess("Registration Successful");
       setTimeout(() => navigate("/"), 1000);
@@ -116,10 +120,9 @@ const RegisterPage = () => {
       );
     }
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
-      <div className="bg-gray-800 shadow-2xl rounded-2xl p-8 w-full max-w-md">
+      <div className="my-10 bg-gray-800 shadow-2xl rounded-2xl p-8 w-full max-w-md">
         <div className="flex justify-center mb-6">
           <button
             className={`px-4 py-2 text-white rounded-l-xl transition-all duration-300 ${userType === "startup" ? "bg-blue-600" : "bg-gray-600"
@@ -177,7 +180,7 @@ const RegisterPage = () => {
                 name="foundingDate"
                 placeholder="Founding Date"
                 onChange={handleChange}
-                value={formData.companyInfo.foundingDate || ""}
+                value={formData.companyInfo.foundingDate}
                 className="w-full px-4 py-3 bg-gray-700 text-gray-100 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
 
@@ -269,7 +272,7 @@ const RegisterPage = () => {
           )}
           {userType === "investor" && (
             <>
-              <input type="text" name="investorInfo.firmName" placeholder="Firm Name" onChange={handleChange} value={formData.investorInfo.firmName} className="w-full px-4 py-3 bg-gray-700 text-gray-100 border border-gray-600 rounded-xl" />
+              <input type="text" name="investorInfo.firmName" placeholder="Firm Name" onChange={handleChange} value={formData.investorInfo.firmName} className="w-full px-4 py-3 bg-gray-700 text-gray-100 border border-gray-600 rounded-xl" required/>
               <input type="text" name="investorInfo.description" placeholder="Firm's brief description" onChange={handleChange} className="w-full px-4 py-3 bg-gray-700 text-gray-100 border border-gray-600 rounded-xl" />
               <input type="text" name="investorInfo.website" placeholder="Firm website" onChange={handleChange} className="w-full px-4 py-3 bg-gray-700 text-gray-100 border border-gray-600 rounded-xl" />
               <input type="text" name="investorInfo.location" placeholder="Firm location" onChange={handleChange} className="w-full px-4 py-3 bg-gray-700 text-gray-100 border border-gray-600 rounded-xl" />

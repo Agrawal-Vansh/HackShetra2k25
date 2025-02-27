@@ -36,16 +36,17 @@ function LoginPage() {
         password,
       });
 
-      const { message, name, success, token, profilePhoto } = res.data;
+      const { message, name, success, token, profilePhoto, userType } = res.data;
       
       localStorage.setItem("token", token);
       localStorage.setItem("loggedInUser", name);
+      localStorage.setItem("userType", userType);
       
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
       handleSuccess(message);
       setTimeout(() => {
-        navigate("/");
+        navigate(`/${userType}`);
       }, 1000);
     } catch (error) {
       handleError(
@@ -66,11 +67,12 @@ function LoginPage() {
         params: { token: googleToken },
       });
 
-      const { message, name, token, profilePhoto } = res.data;
+      const { message, name, token, profilePhoto, userType } = res.data;
       
       localStorage.setItem("token", token);
       localStorage.setItem("loggedInUser", name);
       localStorage.setItem("profilePhoto", profilePhoto);
+      localStorage.setItem("userType", userType);
 
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       

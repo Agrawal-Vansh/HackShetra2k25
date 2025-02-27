@@ -52,10 +52,10 @@ const UserSchema = new mongoose.Schema({
             default:0  }
     },
 
-    // Investor-specific fields (Required only if userType is "investor")
+
     investorInfo: {
         firmName: { type: String,
-            //  required: function() { return this.userType === "investor"; } 
+             required: function() { return this.userType === "investor"; } 
             },
         logo: { type: String },
         description: { type: String },

@@ -8,8 +8,6 @@ import VideoHome from "./pages/VideoCall/VideoHome.jsx";
 import RoomPage from "./pages/VideoCall/RoomPage.jsx";
 import Home from "./Pages/Home/Home.jsx";
 
-// import Dashboard from "./pages/Dashboard/Dashboard.jsx";
-
 function App() {
   return (
     <BrowserRouter>

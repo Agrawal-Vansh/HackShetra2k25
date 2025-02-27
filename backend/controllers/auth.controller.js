@@ -108,8 +108,7 @@ export const googleAuthCallback = async (req, res) => {
 
         if (!user) {
             // If user doesn't exist, create a new one with a placeholder password
-            const hashedPassword = await bcrypt.hash("GoogleLogin", 10);
-            user = await User.create({ name, email, password: hashedPassword, userType: "startup",profilePhoto:picture });
+            return res.status(403).json({ message: "Invalid credentials" });
         }
 
         const jwt_token = jwt.sign(

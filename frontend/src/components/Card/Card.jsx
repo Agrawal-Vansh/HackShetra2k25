@@ -1,8 +1,8 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 const Card = ({ company }) => {
     const userType = localStorage.getItem("userType");
-    console.log(company);
+    console.log(company?.email);
 
     const { name, description, logo, industry, foundingDate, location, website } = company?.companyInfo || {};
     const { stage, amountNeeded, equityOffering } = company?.funding || {};
@@ -54,6 +54,23 @@ const Card = ({ company }) => {
                             </div>
 
                         </div>
+                    </div>
+                    <div className="flex justify-between">
+                        <a
+                            href={`mailto:${company?.email}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block text-center bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+                        >
+                            Send Mail
+                        </a>
+                        <Link to={"/video"}
+                         className="block text-center bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                        <button
+                        >
+                           Contact
+                        </button>
+                        </Link>
                     </div>
                 </>
             ) : (

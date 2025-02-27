@@ -6,13 +6,12 @@ import axios from "axios";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-
+  const [userType, setUserType] = useState("startup");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    userType: "",
+    userType: userType,
     name: "",
-    profilePhoto: "",
     companyInfo: {
       name: "",
       description: "",
@@ -20,54 +19,60 @@ const RegisterPage = () => {
       industry: "",
       foundingDate: "",
       location: "",
-      website: "",
+      website: ""
     },
     funding: {
       stage: "",
       amountNeeded: "",
-      equityOffering: "",
+      equityOffering: ""
+    },
+    metrics: {
+      revenue: "",
+      users: "",
+      growth: ""
     },
     investorInfo: {
       firmName: "",
       logo: "",
       description: "",
       website: "",
-      location: "",
+      location: ""
     },
     investmentCriteria: {
       minAmount: "",
       maxAmount: "",
-      preferredStages: "",
-      preferredIndustries: "",
+      preferredStages: [],
+      preferredIndustries: []
     },
     pastInvestments: [],
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
+    setFormData({
+      ...formData,
       [name]: value,
-    }));
+    });
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
     
     for (const field in formData) {
-      if (!formData[field] && typeof formData[field] !== "object") {
-        return handleError("All fields are required");
-      }
+      if (!formData[field]) return handleError("All fields are required");
     }
-
+  
     try {
-      await axios.post(`${import.meta.env.VITE_URL}/auth/register`, formData);
+      await axios.post(`${import.meta.env.VITE_URL}/auth/register`, {
+        ...formData,
+        userType,
+      });
       handleSuccess("Registration Successful");
       setTimeout(() => navigate("/"), 1000);
     } catch (error) {
       handleError(
         "Registration failed: " +
-          (error.response?.data?.message || error.message)
+        (error.response?.data?.message || error.message)
       );
     }
   };
@@ -75,17 +80,57 @@ const RegisterPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
       <div className="bg-gray-800 shadow-2xl rounded-2xl p-8 w-full max-w-md">
+        <div className="flex justify-center mb-6">
+          <button
+            className={`px-4 py-2 text-white rounded-l-xl transition-all duration-300 ${userType === "startup" ? "bg-blue-600" : "bg-gray-600"
+              }`}
+            onClick={() => setUserType("startup")}
+          >
+            Startup
+          </button>
+          <button
+            className={`px-4 py-2 text-white rounded-r-xl transition-all duration-300 ${userType === "investor" ? "bg-blue-600" : "bg-gray-600"
+              }`}
+            onClick={() => setUserType("investor")}
+          >
+            Investor
+          </button>
+        </div>
+
         <h1 className="text-3xl font-bold text-gray-100 text-center mb-8">Register</h1>
         <form className="space-y-6" onSubmit={handleRegister}>
-          <input
-            type="email"
-            name="email"
+          {[
+            { name: "name", placeholder: "Name", type: "text" },
+            { name: "id", placeholder: "ID", type: "text" },
+            { name: "email", placeholder: "Email", type: "email" },
+            { name: "phone", placeholder: "Phone", type: "tel" },
+            { name: "dob", placeholder: "Date of Birth", type: "date" },
+            { name: "yearOfJoining", placeholder: "Year of Joining", type: "number" },
+            { name: "address", placeholder: "Address", type: "text" },
+          ].map(({ name, placeholder, type }) => (
+            <input
+              key={name}
+              type={type}
+              name={name}
+              onChange={handleChange}
+              value={formData[name]}
+              className="w-full px-4 py-3 bg-gray-700 text-gray-100 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder={placeholder}
+              required
+            />
+          ))}
+          <select
+            name="gender"
             onChange={handleChange}
-            value={formData.email}
+            value={formData.gender}
             className="w-full px-4 py-3 bg-gray-700 text-gray-100 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Email"
             required
-          />
+          >
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
           <input
             type="password"
             name="password"
@@ -95,17 +140,6 @@ const RegisterPage = () => {
             placeholder="Password"
             required
           />
-          <select
-            name="userType"
-            onChange={handleChange}
-            value={formData.userType}
-            className="w-full px-4 py-3 bg-gray-700 text-gray-100 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          >
-            <option value="">Select User Type</option>
-            <option value="startup">Startup</option>
-            <option value="investor">Investor</option>
-          </select>
           <button
             type="submit"
             className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium py-3 px-4 rounded-xl shadow-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500"

@@ -25,7 +25,6 @@ export async function handleRegisterUser(req, res) {
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
-
         // Create user object
         const newUser = new User({
             name,

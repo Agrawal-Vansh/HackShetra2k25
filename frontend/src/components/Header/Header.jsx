@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { handleSuccess, handleError } from "../../utils";
 import { ToastContainer } from "react-toastify";
-import logo from "../../assets/logo.jpg"; // Import the logo
+
 
 const Header = () => {
     const [loggedInUser, setLoggedInUser] = useState(null);
@@ -65,17 +65,17 @@ const Header = () => {
                 {/* Logo and Brand Name */}
                 <a className="flex items-center text-gray-100 hover:text-gray-300">
                     <img
-                        src={logo} // Use the imported logo
+                        src="https://th.bing.com/th/id/OIP.FKGJu0u5qwNrKAZKWIhytgHaF7?rs=1&pid=ImgDetMain" // Use the imported logo
                         alt="PYQ Pulse Logo"
                         className="w-10 h-10 rounded-full object-cover"
                     />
-                    <span className="ml-3 text-xl font-bold">PYQ Pulse</span>
+                    <span className="ml-3 text-xl font-bold">StartUP Connect</span>
                 </a>
 
                 {/* Quote Section */}
                 <div className="hidden md:flex items-center">
                     <p className="text-2xl font-medium bg-gradient-to-r from-slate-100 to-slate-200 italic bg-clip-text text-transparent">
-                        Fuel Your Academic Ambitions
+                        Fuel Your StartUP Dreams
                     </p>
                 </div>
 

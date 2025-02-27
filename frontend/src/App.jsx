@@ -4,14 +4,10 @@ import LoginPage from "./pages/Login/LoginPage.jsx";
 import PageNotFound from "./pages/PageNotFound/PageNotFound.jsx";
 import Layout from "./layout/Homelayout.jsx";
 import RegisterPage from "./pages/Register/RegisterPage.jsx";
-<<<<<<< HEAD
-import Home from "./Pages/Home/Home.jsx";
-
-=======
 import VideoHome from "./pages/VideoCall/VideoHome.jsx";
 import RoomPage from "./pages/VideoCall/RoomPage.jsx";
-// import Home from "./pages/Home/Home.jsx";
->>>>>>> 986410aec70cd167b51da59f2db020bfd937bdb1
+import Home from "./Pages/Home/Home.jsx";
+
 // import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 
 function App() {

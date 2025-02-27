@@ -5,20 +5,21 @@ import axios from "axios";
 const Home = () => {
   const [data, setData] = useState([]);
   const userType = localStorage.getItem("userType");
+  console.log(userType);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axios.get(`${import.meta.env.VITE_URL}/api/users/opposite/${userType}`);
-        setData(res.data); // ✅ Extract `data` from response
+        setData(res.data); 
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    if (userType) fetchData(); // ✅ Prevent running if `userType` is null
+    if (userType) fetchData(); 
 
-  }, [userType]); // ✅ Add `userType` as a dependency
+  }, [userType]); 
 
   return (
     <div className="min-h-screen bg-gray-800 py-8">

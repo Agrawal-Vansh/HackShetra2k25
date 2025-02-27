@@ -9,7 +9,8 @@ const Footer = () => {
                     <div className="text-left">
                         <h3 className="text-2xl font-bold text-gray-100 mb-4">About Us</h3>
                         <p className="text-gray-400">
-                            At <span className="font-semibold text-xl text-blue-400">PYQ Pulse</span>, we are passionate about helping students achieve academic excellence. Our platform provides a collaborative community to fuel your academic ambitions.
+                            StartUP Connect is a platform to help startups connect with investors and customers.
+                            We provide a platform for startups to showcase their products and services to the world.
                         </p>
                     </div>
 
@@ -27,7 +28,7 @@ const Footer = () => {
                 </div>
 
                 <div className="mt-8 text-center text-gray-400">
-                    <p>Made with ❤ by <span className="font-semibold text-blue-400 text-xl">Team Code Catalysts</span></p>
+                    <p>Made with ❤ by <span className="font-semibold text-blue-400 text-xl">Team Insiders</span></p>
                 </div>
             </div>
         </footer>

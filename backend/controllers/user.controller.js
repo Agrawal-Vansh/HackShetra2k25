@@ -9,7 +9,6 @@ import User from '../models/users.model.js';
             if (userType !== 'startup' && userType !== 'investor') {
                 return res.status(400).json({ message: 'Invalid userType parameter' });
             }
-
             // Determine the opposite userType
             const oppositeUserType = userType === 'startup' ? 'investor' : 'startup';
 

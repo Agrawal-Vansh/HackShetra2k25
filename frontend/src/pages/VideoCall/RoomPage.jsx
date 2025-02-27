@@ -4,43 +4,49 @@ import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
 
 const RoomPage = () => {
   const { roomId } = useParams();
-  const myMeeting = useRef(null);
+  const myMeeting = useRef(null); // Using useRef for the container reference
 
   useEffect(() => {
     const myMettingFunc = async (element) => {
-      const appId = Number(import.meta.env.VITE_APPID);
-      const serverSecret = import.meta.env.VITE_SERVER_SECRET;
+      // Ensure you are using the correct App ID and Server Secret from the environment variables
+      const appId = Number(import.meta.env.VITE_APPID); // Ensure it's a number
+      const serverSecret = import.meta.env.VITE_SERVER_SECRET; // Keep it as a string
 
       console.log("appId:", appId);
       console.log("serverSecret:", serverSecret);
 
+      // Generate the kit token for test purposes
       const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
         appId,
         serverSecret,
-        roomId,
-        Date.now().toString(),
-        "Vansh Agrawal"
+        roomId, // Use roomId from URL params
+        Date.now().toString(), // Use the current timestamp for the user ID (this can be dynamic)
+        "Vansh Agrawal" // User name
       );
 
+      // Initialize the ZEGOCLOUD UI Kit Prebuilt instance
       const zp = ZegoUIKitPrebuilt.create(kitToken);
 
+      // Join the room
       zp.joinRoom({
-        container: element,
+        container: element, // The container for video/audio
         scenario: {
-          mode: ZegoUIKitPrebuilt.OneONoneCall,
+          mode: ZegoUIKitPrebuilt.OneONoneCall, // Scenario for 1-on-1 call
         },
-        showScreenSharingButton: true,
+        showScreenSharingButton: true, // Show the screen sharing button
       });
     };
 
+    // Call the meeting function only once after the component mounts
     if (myMeeting.current) {
       myMettingFunc(myMeeting.current);
     }
-  }, [roomId]);
+  }, [roomId]); // Re-run when roomId changes
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 p-6">
       <h2 className="text-3xl font-bold text-center mb-6">Room ID: {roomId}</h2>
+      {/* The div will be used by ZEGOCLOUD UI Kit to place the video UI */}
       <div
         ref={myMeeting}
         className="w-full h-[calc(100vh-10rem)] bg-gray-800 rounded-2xl shadow-2xl overflow-hidden"

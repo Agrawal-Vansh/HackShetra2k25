@@ -1,5 +1,7 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { handleError } from '../../utils';
 
 const VideoHome = () => {
   const [roomId, setRoomId] = useState('');
@@ -7,15 +9,31 @@ const VideoHome = () => {
   const location = useLocation();
   const senderMail = localStorage.getItem("email");
   const senderName = localStorage.getItem("loggedInUser");
-  const recieverMail = location.state?.email;
-  console.log(senderMail)
-  console.log(recieverMail)
-  console.log(senderName)
+  const recieverEmail = location.state?.email;
 
-  const generateRoomId = () => {
-    const randomId = Math.floor(1000 + Math.random() * 9000); // Generates a 4-digit room ID
-    setRoomId(randomId.toString());
+  const generateRoomId = async () => {
+    const randomId = Math.floor(1000 + Math.random() * 9000);
+    setRoomId(randomId.toString()); // Updates state asynchronously
+  
+    if (!senderName || !recieverEmail) {
+      console.error("Sender or receiver email is missing.");
+      handleError("Sender or receiver email is missing.");
+      return;
+    }
+  
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_URL}/api/mail/meeting`, {
+        senderName,
+        receiverEmail: recieverEmail.toString(),
+        meetingCode: randomId
+      });
+      console.log("API Response:", res.data);
+    } catch (error) {
+      console.error("API Error:", error.response?.data || error.message);
+      handleError(error.response?.data?.message || "Failed to generate room ID.");
+    }
   };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();

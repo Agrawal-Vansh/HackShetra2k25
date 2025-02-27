@@ -43,7 +43,7 @@ const sendEmailToInvestors = async (startupData, investorEmails) => {
 export const sendMeetingEmail = async (req, res) => {
   try {
     const { senderName, receiverEmail, meetingCode } = req.body;
-    // console.log(senderName+" "+receiverEmail+" "+meetingCode);
+    console.log(senderName+" "+receiverEmail+" "+meetingCode);
     
     if (!senderName || !receiverEmail || !meetingCode) {
       return res.status(400).json({ message: "All fields are required" });

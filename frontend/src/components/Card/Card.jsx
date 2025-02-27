@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 const Card = ({ company }) => {
     const userType = localStorage.getItem("userType");
-    console.log(company?.email);
+    console.log(company)
 
     const { name, description, logo, industry, foundingDate, location, website } = company?.companyInfo || {};
     const { stage, amountNeeded, equityOffering } = company?.funding || {};

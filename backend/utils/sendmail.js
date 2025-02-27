@@ -4,7 +4,8 @@ const sendEmailToInvestors = async (startupData, investorEmails) => {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail", // Using Gmail (You can change this to another provider)
-      auth: {
+      auth: 
+      {
         user: process.env.EMAIL_USER, // Your platform email
         pass: process.env.EMAIL_PASS, // Your app password
       },

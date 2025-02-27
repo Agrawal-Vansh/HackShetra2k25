@@ -22,14 +22,16 @@ import User from '../models/users.model.js';
                         name: oppositeUser.name,
                         companyInfo: oppositeUser.companyInfo,
                         funding: oppositeUser.funding,
-                        metrics: oppositeUser.metrics
+                        metrics: oppositeUser.metrics,
+                        email:oppositeUser.email
                     };
                 } else if (oppositeUser.userType === 'investor') {
                     return {
                         name: oppositeUser.name,
                         investorInfo: oppositeUser.investorInfo,
                         investmentCriteria: oppositeUser.investmentCriteria,
-                        pastInvestments: oppositeUser.pastInvestments
+                        pastInvestments: oppositeUser.pastInvestments,
+                        email:oppositeUser.email
                     };
                 }
             });

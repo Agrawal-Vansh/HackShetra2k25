@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import sendEmailToInvestors from "../utils/sendmail.js";
 
 dotenv.config();
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -25,6 +26,7 @@ export async function handleRegisterUser(req, res) {
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
+
         // Create user object
         const newUser = new User({
             name,
@@ -35,14 +37,30 @@ export async function handleRegisterUser(req, res) {
             ...(userType === "investor" ? { investorInfo, investmentCriteria, pastInvestments } : {})
         });
 
-        // Save to the database
+        // Save user to database
         await newUser.save();
 
+        // If a startup registers, notify all investors
+        if (userType === "startup") {
+            const investors = await User.find({ userType: "investor" }, "email");
+            const investorEmails = investors.map((investor) => investor.email);
+
+            if (investorEmails.length > 0) {
+                try {
+                    await sendEmailToInvestors(newUser, investorEmails);
+                    console.log(`📩 Email sent to investors about new startup: ${name}`);
+                } catch (emailError) {
+                    console.error("❌ Error sending email to investors:", emailError);
+                }
+            }
+        }
+
+        console.log(`✅ User registered successfully: ${email}`);
         res.status(201).json({ message: "User registered successfully", success: true });
 
     } catch (error) {
-        console.error("Registration Error:", error);
-        res.status(500).json({ message: "Server error" });
+        console.error("❌ Registration Error:", error);
+        res.status(500).json({ message: "Server error", details: error.message });
     }
 }
 
@@ -107,8 +125,7 @@ export const googleAuthCallback = async (req, res) => {
 
         if (!user) {
             // If user doesn't exist, create a new one with a placeholder password
-            const hashedPassword = await bcrypt.hash("GoogleLogin", 10);
-            user = await User.create({ name, email, password: hashedPassword, userType: "startup",profilePhoto:picture });
+            return res.status(403).json({ message: "Invalid credentials" });
         }
 
         const jwt_token = jwt.sign(

@@ -58,44 +58,16 @@ const RegisterPage = () => {
   }, [userType]); 
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-
-    setFormData((prevFormData) => {
-      if (type === "checkbox") {
-        const field = name.split(".").pop(); // Extract 'preferredStages' or 'preferredIndustries'
-        return {
-          ...prevFormData,
-          investmentCriteria: {
-            ...prevFormData.investmentCriteria,
-            [field]: checked
-              ? [...prevFormData.investmentCriteria[field], value]
-              : prevFormData.investmentCriteria[field].filter((item) => item !== value),
-          },
-        };
-      } else {
-        // Handle nested fields
-        const keys = name.split("."); // Split the name into keys (e.g., ["companyInfo", "name"])
-        if (keys.length > 1) {
-          return {
-            ...prevFormData,
-            [keys[0]]: {
-              ...prevFormData[keys[0]],
-              [keys[1]]: value,
-            },
-          };
-        } else {
-          // Handle non-nested fields
-          return {
-            ...prevFormData,
-            [name]: value,
-          };
-        }
-      }
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
     });
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
+<<<<<<< HEAD
     console.log(formData);
   
 
@@ -104,6 +76,11 @@ const RegisterPage = () => {
       requiredFields.push("companyInfo.name", "companyInfo.industry", "funding.stage", "funding.amountNeeded", "funding.equityOffering");
     } else if (userType === "investor") {
       requiredFields.push("investorInfo.firmName", "investmentCriteria.minAmount", "investmentCriteria.maxAmount");
+=======
+    
+    for (const field in formData) {
+      if (!formData[field]) return handleError("All fields are required");
+>>>>>>> 986410aec70cd167b51da59f2db020bfd937bdb1
     }
   
     try {
@@ -142,15 +119,23 @@ const RegisterPage = () => {
 
         <h1 className="text-3xl font-bold text-gray-100 text-center mb-8">Register</h1>
         <form className="space-y-6" onSubmit={handleRegister}>
-          {["email", "password", "name"].map((name) => (
+          {[
+            { name: "name", placeholder: "Name", type: "text" },
+            { name: "id", placeholder: "ID", type: "text" },
+            { name: "email", placeholder: "Email", type: "email" },
+            { name: "phone", placeholder: "Phone", type: "tel" },
+            { name: "dob", placeholder: "Date of Birth", type: "date" },
+            { name: "yearOfJoining", placeholder: "Year of Joining", type: "number" },
+            { name: "address", placeholder: "Address", type: "text" },
+          ].map(({ name, placeholder, type }) => (
             <input
               key={name}
-              type={name === "password" ? "password" : "text"}
+              type={type}
               name={name}
               onChange={handleChange}
               value={formData[name]}
               className="w-full px-4 py-3 bg-gray-700 text-gray-100 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder={name.charAt(0).toUpperCase() + name.slice(1)}
+              placeholder={placeholder}
               required
             />
           ))}

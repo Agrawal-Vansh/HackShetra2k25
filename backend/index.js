@@ -3,7 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectMongodb from "./connection.js";
 import authRoutes from './routes/authRoutes.js';
-// import userRoutes from './routes/user.routes.js';
+import userRoutes from './routes/userRoutes.js';
+import aiRoutes from './routes/aiRoutes.js';
 // import matchRoutes from './routes/match.routes.js';
 
 dotenv.config();
@@ -30,7 +31,8 @@ app.use(cors(corsOptions));
 
 
 app.use('/auth', authRoutes);
-// app.use('/api/users', userRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/users', userRoutes);
 // app.use('/api/match', matchRoutes);
 
 app.get("/",(req, res) => {res.status(200).json({"message":"backend working"});});

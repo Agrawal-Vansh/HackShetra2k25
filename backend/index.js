@@ -6,6 +6,7 @@ import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 // import matchRoutes from './routes/match.routes.js';
+import mailRoutes from './routes/mailRoute.js';
 
 dotenv.config();
 const PORT=process.env.PORT || 5000;
@@ -33,6 +34,7 @@ app.use(cors(corsOptions));
 app.use('/auth', authRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/mail', mailRoutes);
 // app.use('/api/match', matchRoutes);
 
 app.get("/",(req, res) => {res.status(200).json({"message":"backend working"});});

@@ -7,6 +7,7 @@ import RegisterPage from "./pages/Register/RegisterPage.jsx";
 import VideoHome from "./pages/VideoCall/VideoHome.jsx";
 import RoomPage from "./pages/VideoCall/RoomPage.jsx";
 import Home from "./Pages/Home/Home.jsx";
+import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/video" element={<VideoHome />} />
         <Route path="/room/:roomId" element={<RoomPage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

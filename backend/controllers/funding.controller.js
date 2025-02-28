@@ -66,3 +66,64 @@ export const getFundingByStartupEmail = async (req, res) => {
       res.status(500).json({ message: "Server error. Please try again later." });
     }
   };
+
+export const getFundingByInvestorEmail = async (req, res) => {
+    try {
+      const { email } = req.params;
+  
+      // Find the investor by email
+      const investor = await User.findOne({ email, userType: "investor" });
+  
+      if (!investor) {
+        return res.status(404).json({ message: "Investor not found." });
+      }
+  
+      // Find all funding records where this investor has made investments
+      const fundingRecords = await Funding.find({ investorId: investor._id })
+        .populate("startupId", "name email")  // Populate startup details
+        .populate("investorId", "name email"); // Populate investor details (optional)
+  
+      if (fundingRecords.length === 0) {
+        return res.status(404).json({ message: "No funding records found for this investor." });
+      }
+  
+      res.status(200).json(fundingRecords);
+    } catch (error) {
+      console.error("Error fetching funding details:", error);
+      res.status(500).json({ message: "Server error. Please try again later." });
+    }
+  };
+  
+
+export const handleUpdateStatus= async (req, res) => {
+  try {
+    const { startupEmail, status } = req.body;
+
+    // Validate input
+    if (!startupEmail || !status) {
+      return res.status(400).json({ message: "Startup email and status are required." });
+    }
+
+    // Find startup by email
+    const startup = await User.findOne({ email: startupEmail });
+    if (!startup) {
+      return res.status(404).json({ message: "Startup not found." });
+    }
+
+    // Find and update the funding record for this startup
+    const updatedFunding = await Funding.findOneAndUpdate(
+      { startupId: startup._id }, // Find funding by startup ID
+      { $set: { status } },       // Update status
+      { new: true }               // Return updated document
+    );
+
+    if (!updatedFunding) {
+      return res.status(404).json({ message: "Funding proposal not found for this startup." });
+    }
+
+    res.json({ message: "Funding status updated successfully.", funding: updatedFunding });
+  } catch (error) {
+    console.error("Error updating funding status:", error);
+    res.status(500).json({ message: "Server error." });
+  }
+};

@@ -40,4 +40,48 @@ const sendEmailToInvestors = async (startupData, investorEmails) => {
   }
 };
 
+export const sendMeetingEmail = async (req, res) => {
+  try {
+    const { senderName, receiverEmail, meetingCode } = req.body;
+    console.log(senderName+" "+receiverEmail+" "+meetingCode);
+    
+    if (!senderName || !receiverEmail || !meetingCode) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Create a transporter using the platform's admin email
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER, // Admin email (platform's email)
+        pass: process.env.EMAIL_PASS,  // Admin email's app password
+      },
+    });
+
+    const mailOptions = {
+      from: `"Admin - Meeting Platform" <${process.env.ADMIN_EMAIL}>`,
+      to: receiverEmail,
+      subject: `📅 Meeting Invitation - Code: ${meetingCode}`,
+      html: `
+        <h2>You Have a New Meeting Invitation!</h2>
+        <p><strong>Meeting Code:</strong> ${meetingCode}</p>
+        <p><strong>Sent By:</strong> ${senderName}</p>
+        <p>If you have any questions, reply to this email.</p>
+        <br>
+        <p>Best regards,</p>
+        <p><strong>Admin Team</strong></p>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`📩 Meeting email sent from Admin to ${receiverEmail}`);
+
+    res.status(200).json({ message: "Meeting email sent successfully" });
+
+  } catch (error) {
+    console.error("❌ Error sending email:", error);
+    res.status(500).json({ message: "Failed to send email", error: error.message });
+  }
+};
+
 export default sendEmailToInvestors;

@@ -44,10 +44,13 @@ const RoomPage = () => {
   }, [roomId]); // Re-run when roomId changes
 
   return (
-    <div>
-      <h2>Room ID: {roomId}</h2>
+    <div className="min-h-screen bg-gray-900 text-gray-100 p-6">
+      <h2 className="text-3xl font-bold text-center mb-6">Room ID: {roomId}</h2>
       {/* The div will be used by ZEGOCLOUD UI Kit to place the video UI */}
-      <div ref={myMeeting} style={{ width: '100%', height: '100%' }} />
+      <div
+        ref={myMeeting}
+        className="w-full h-[calc(100vh-10rem)] bg-gray-800 rounded-2xl shadow-2xl overflow-hidden"
+      />
     </div>
   );
 };

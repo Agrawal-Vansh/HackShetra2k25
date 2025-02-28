@@ -29,6 +29,7 @@ const Header = () => {
         handleSuccess(`${loggedInUser} Logged Out`); // Toast notification on logout
         localStorage.removeItem("loggedInUser");
         localStorage.removeItem("userType");
+        localStorage.removeItem("email")
 
         // Update state to ensure UI reflects the change immediately
         setLoggedInUser(null);

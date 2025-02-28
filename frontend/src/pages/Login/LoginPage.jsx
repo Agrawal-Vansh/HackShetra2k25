@@ -41,6 +41,7 @@ function LoginPage() {
       localStorage.setItem("token", token);
       localStorage.setItem("loggedInUser", name);
       localStorage.setItem("userType", userType);
+      localStorage.setItem("email", email)
       
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
@@ -67,12 +68,13 @@ function LoginPage() {
         params: { token: googleToken },
       });
 
-      const { message, name, token, profilePhoto, userType } = res.data;
+      const { message, name, token, profilePhoto, userType, email: mail } = res.data;
       
       localStorage.setItem("token", token);
       localStorage.setItem("loggedInUser", name);
       localStorage.setItem("profilePhoto", profilePhoto);
       localStorage.setItem("userType", userType);
+      localStorage.setItem("email", mail);
 
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       

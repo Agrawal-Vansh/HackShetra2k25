@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Card from "../../Components/Card/Card";
 import axios from "axios";
+import PopUp from "../../Components/PopUp/PopUp";
 
 const Home = () => {
   const [data, setData] = useState([]);
   const userType = localStorage.getItem("userType");
-  console.log(userType);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedStartupEmail, setSelectedStartupEmail] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,17 +19,22 @@ const Home = () => {
       }
     };
 
-    if (userType) fetchData(); 
-
+    if (userType) fetchData();
   }, [userType]); 
 
   return (
     <div className="min-h-screen bg-gray-800 py-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 place-items-center">
         {data.map((company, index) => (
-          <Card key={index} company={company} />
+          <div key={index} className="w-full max-w-[350px]">
+            <Card company={company}  onOpenPopup={() => {
+                setSelectedStartupEmail(company.email); // ✅ Set selected startup email
+                setIsOpen(true);
+              }}/>
+          </div>
         ))}
       </div>
+      <PopUp isOpen={isOpen} onClose={() => setIsOpen(false)} startupEmail={selectedStartupEmail}  />
     </div>
   );
 };

@@ -47,7 +47,7 @@ function LoginPage() {
 
       handleSuccess(message);
       setTimeout(() => {
-        navigate(`/`);
+        navigate(`/home`);
       }, 1000);
     } catch (error) {
       handleError(
@@ -80,7 +80,7 @@ function LoginPage() {
       
       handleSuccess(message);
       setTimeout(() => {
-        navigate("/");
+        navigate("/home");
       }, 1000);
     } catch (error) {
       handleError("Google login failed: " + error.message);

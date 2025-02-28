@@ -14,11 +14,11 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
         </Route>
 
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/video" element={<VideoHome />} />
         <Route path="/room/:roomId" element={<RoomPage />} />

@@ -85,7 +85,7 @@ const Header = () => {
                     {loggedInUser && (
                         <>
                             {/* Dashboard Button */}
-                            <button className="btn" onClick={() => navigate(location.pathname === "/dashboard" ? "/" : "/dashboard")}>
+                            <button className="btn" onClick={() => navigate(location.pathname === "/dashboard" ? "/home" : "/dashboard")}>
                                 {location.pathname === "/dashboard" ? "Home" : "Dashboard"}
                             </button>
                             {/* Profile Photo or Icon */}
@@ -122,7 +122,7 @@ const Header = () => {
                             <button className="btn" onClick={() => navigate("/register")}>
                                 Register
                             </button>
-                            <button className="btn" onClick={() => navigate("/login")}>
+                            <button className="btn" onClick={() => navigate("/")}>
                                 Login
                             </button>
                         </>

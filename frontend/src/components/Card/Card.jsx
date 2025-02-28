@@ -1,15 +1,65 @@
+import axios from "axios";
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 const Card = ({ company, onOpenPopup }) => {
     const userType = localStorage.getItem("userType");
+    console.log(company);
 
     const { name, description, logo, industry, foundingDate, location, website } = company?.companyInfo || {};
     const { stage, amountNeeded, equityOffering } = company?.funding || {};
     const { revenue, users, growth } = company?.metrics || {};
     const { minAmount, maxAmount, preferredStages = [], preferredIndustries = [] } = company?.investmentCriteria || {};
+    const [value, setpredictvalue] = useState(null);
+    const [data, setData] = useState({
+        funding: {
+            stage: "",
+            amountNeeded: "",
+            equityOffering: 10,
+        },
+        metrics: {
+            revenue: 0,
+            users: 0,
+            growth: 0,
+        },
+    });
+
+   
+    const predictValue = () => {
+        console.log(company?.funding?.stage);
+    
+        setData((prevData) => ({
+            ...prevData,
+            funding: {
+                stage: company?.funding?.stage || "",
+                amountNeeded: company?.funding?.amountNeeded || "",
+                equityOffering: company?.funding?.equityOffering || 0,
+            },
+            metrics: {
+                revenue: company?.metrics?.revenue || 0,
+                users: company?.metrics?.users || 0,
+                growth: company?.metrics?.growth || 0,
+            },
+        }));
+    };
+    
+    // Use useEffect to trigger API call after data updates 
+    useEffect(() => {
+        if (data) {
+            const sendData = async () => {
+                try {
+                    const response = await axios.post(`${import.meta.env.VITE_URL}/api/ai/value`, data);
+                    console.log("Response:", response.data);
+                    setpredictvalue(response.data.ans);
+                } catch (error) {
+                    console.error("Error sending data:", error);
+                }
+            };
+            sendData();
+        }
+    }, [data]);
 
     return (
         <div className="bg-gray-900 rounded-lg shadow-lg p-6 max-w-sm mx-auto text-white transform transition-transform duration-300 hover:scale-105">
@@ -93,7 +143,7 @@ const Card = ({ company, onOpenPopup }) => {
                             </div>
                             <div className="flex justify-between">
                                 <span className="font-semibold">Amount Needed:</span>
-                                <span className="text-gray-400">${amountNeeded ? amountNeeded.toLocaleString() : "N/A"}</span>
+                                <span className="text-gray-400">Rs.{amountNeeded ? amountNeeded.toLocaleString() : "N/A"}</span>
                             </div>
                             <div className="flex justify-between">
                                 <span className="font-semibold">Equity Offering:</span>
@@ -107,7 +157,7 @@ const Card = ({ company, onOpenPopup }) => {
                         <div className="space-y-2">
                             <div className="flex justify-between">
                                 <span className="font-semibold">Revenue:</span>
-                                <span className="text-gray-400">{revenue ? `$${revenue.toLocaleString()}` : "N/A"}</span>
+                                <span className="text-gray-400">{revenue ? `Rs.${revenue.toLocaleString()}` : "N/A"}</span>
                             </div>
                             <div className="flex justify-between">
                                 <span className="font-semibold">Users:</span>
@@ -119,6 +169,12 @@ const Card = ({ company, onOpenPopup }) => {
                             </div>
                         </div>
                     </div>
+                    {value !== null && value!=0 && (
+                        <div className="mb-4 text-center">
+                            <h3 className="text-xl font-semibold">Predicted Value:</h3>
+                            <p className="text-green-400 text-2xl font-bold">Rs.{value.toLocaleString()}</p>
+                        </div>
+                    )}
                     <div className="flex justify-between">
                         <a
                             href={website ? website : "#"}
@@ -133,6 +189,9 @@ const Card = ({ company, onOpenPopup }) => {
                         </button>
 
                     </div>
+                        <button onClick={predictValue} className="mt-5 block text-center bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors hover:cursor-pointer">
+                           Predict Value
+                        </button>
                     <ToastContainer />
                 </>
             )}

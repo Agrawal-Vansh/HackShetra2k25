@@ -7,7 +7,6 @@ const Dashboard = () => {
   const [error, setError] = useState(null);
   const [userType, setUserType] = useState(localStorage.getItem("userType"));
 
-  // Get user email from localStorage
   const userEmail = localStorage.getItem("email");
 
   useEffect(() => {
@@ -23,7 +22,7 @@ const Dashboard = () => {
           userType === "startup"
             ? `http://localhost:8000/api/funding/detail/${userEmail}`
             : `http://localhost:8000/api/funding/detail/investor/${userEmail}`;
-        
+
         const response = await axios.get(url);
         setFundingProposals(response.data);
       } catch (err) {
@@ -34,7 +33,7 @@ const Dashboard = () => {
     };
 
     fetchFundingDetails();
-  }, [userEmail, userType]); // Runs when userEmail or userType changes
+  }, [userEmail, userType]);
 
   const handleStatusChange = async (proposalId, startupEmail, newStatus) => {
     try {
@@ -42,7 +41,7 @@ const Dashboard = () => {
         startupEmail,
         status: newStatus,
       });
-      
+
       setFundingProposals((prevProposals) =>
         prevProposals.map((proposal) =>
           proposal._id === proposalId ? { ...proposal, status: newStatus } : proposal
@@ -53,68 +52,86 @@ const Dashboard = () => {
     }
   };
 
-  if (loading) return <p className="text-center text-gray-500">Loading funding proposals...</p>;
+  if (loading) return <p className="text-center text-gray-400">Loading funding proposals...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">Funding Proposals</h2>
-      
+    <div className="w-full p-6 bg-gray-950 text-white shadow-lg">
+      <h2 className="text-3xl font-bold text-blue-400 text-center mb-6">Funding Proposals</h2>
+
       {fundingProposals.length === 0 ? (
-        <p className="text-gray-600 text-center">No funding proposals yet.</p>
+        <p className="text-gray-400 text-center">No funding proposals yet.</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse border border-gray-300">
+          <table className="w-full border border-gray-800 bg-gray-900 text-gray-300">
             <thead>
               <tr className="bg-blue-600 text-white">
                 {userType === "startup" ? (
                   <>
-                    <th className="p-3 border">Investor Name</th>
-                    <th className="p-3 border">Investor Email</th>
+                    <th className="p-3 border border-gray-700">Investor Name</th>
+                    <th className="p-3 border border-gray-700">Investor Email</th>
                   </>
                 ) : (
                   <>
-                    <th className="p-3 border">Startup Name</th>
-                    <th className="p-3 border">Startup Email</th>
+                    <th className="p-3 border border-gray-700">Startup Name</th>
+                    <th className="p-3 border border-gray-700">Startup Email</th>
                   </>
                 )}
-                <th className="p-3 border">Amount</th>
-                <th className="p-3 border">Equity (%)</th>
-                <th className="p-3 border">Status</th>
-                <th className="p-3 border">Notes</th>
-                {userType === "investor" && <th className="p-3 border">Update Status</th>}
+                <th className="p-3 border border-gray-700">Amount</th>
+                <th className="p-3 border border-gray-700">Equity (%)</th>
+                <th className="p-3 border border-gray-700">Status</th>
+                <th className="p-3 border border-gray-700">Notes</th>
+                {userType === "investor" && <th className="p-3 border border-gray-700">Update Status</th>}
               </tr>
             </thead>
             <tbody>
               {fundingProposals.map((proposal) => (
-                <tr key={proposal._id} className="text-center odd:bg-gray-100 even:bg-white">
+                <tr
+                  key={proposal._id}
+                  className="text-center odd:bg-gray-800 even:bg-gray-850 hover:bg-gray-700 transition duration-200"
+                >
                   {userType === "startup" ? (
                     <>
-                      <td className="p-3 border">{proposal.investorId.name}</td>
-                      <td className="p-3 border">{proposal.investorId.email}</td>
+                      <td className="p-3 border border-gray-700">{proposal.investorId.name}</td>
+                      <td className="p-3 border border-gray-700">{proposal.investorId.email}</td>
                     </>
                   ) : (
                     <>
-                      <td className="p-3 border">{proposal.startupId.name}</td>
-                      <td className="p-3 border">{proposal.startupId.email}</td>
+                      <td className="p-3 border border-gray-700">{proposal.startupId.name}</td>
+                      <td className="p-3 border border-gray-700">{proposal.startupId.email}</td>
                     </>
                   )}
-                  <td className="p-3 border">₹{proposal.amount.toLocaleString()}</td>
-                  <td className="p-3 border">{proposal.equity}%</td>
-                  <td className="p-3 border font-semibold text-blue-600">{proposal.status}</td>
-                  <td className="p-3 border text-gray-700">{proposal.notes}</td>
+                  <td className="p-3 border border-gray-700">₹{proposal.amount.toLocaleString()}</td>
+                  <td className="p-3 border border-gray-700">{proposal.equity}%</td>
+
+                  {/* Dynamic status color based on the proposal status */}
+                  <td
+                    className={`p-3 border border-gray-700 font-bold uppercase ${
+                      proposal.status === "proposed"
+                        ? "text-yellow-400"
+                        : proposal.status === "reviewing"
+                        ? "text-orange-400"
+                        : proposal.status === "accepted"
+                        ? "text-green-400"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {proposal.status.toUpperCase()}
+                  </td>
+
+                  <td className="p-3 border border-gray-700 text-gray-400">{proposal.notes}</td>
                   {userType === "investor" && (
-                    <td className="p-3 border">
+                    <td className="p-3 border border-gray-700">
                       <select
-                        className="border p-2 rounded"
+                        className="bg-gray-900 border border-gray-600 text-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                         value={proposal.status}
                         onChange={(e) =>
                           handleStatusChange(proposal._id, proposal.startupId.email, e.target.value)
                         }
                       >
                         {["proposed", "reviewing", "accepted", "rejected"].map((statusOption) => (
-                          <option key={statusOption} value={statusOption}>
-                            {statusOption}
+                          <option key={statusOption} value={statusOption} className="bg-gray-900 text-white">
+                            {statusOption.charAt(0).toUpperCase() + statusOption.slice(1)}
                           </option>
                         ))}
                       </select>

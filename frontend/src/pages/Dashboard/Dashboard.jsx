@@ -26,7 +26,7 @@ const Dashboard = () => {
         const response = await axios.get(url);
         setFundingProposals(response.data);
       } catch (err) {
-        setError("Failed to fetch funding proposals.");
+        setError("No funding proposals exists.");
       } finally {
         setLoading(false);
       }

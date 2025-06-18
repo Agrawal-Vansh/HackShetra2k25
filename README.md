@@ -18,13 +18,13 @@ StartUP Connect is a platform that connects startups with investors, enabling fu
 - AI/ML: Gemini API, Python (for scoring/matching)
 
 ## Demo 
-![alt text](frontend\src\assets\image.png)
+![alt text](frontend/public/image.png)
 
-![alt text](frontend\src\assets\image-3.png)
+![alt text](frontend/public/image-3.png)
 
-![alt text](frontend\src\assets\image-1.png)
+![alt text](frontend/public/image-1.png)
 
-![alt text](frontend\src\assets\image-2.png)
+![alt text](frontend/public/image-2.png)
 
 ## Getting Started
 
